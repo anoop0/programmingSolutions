@@ -1,0 +1,43 @@
+Error: 
+        XMLHttpRequest cannot load http://<URL>/<ContextName>. 
+        No 'Access-Control-Allow-Origin' header is present on the requested resource. 
+        Origin 'http://<URL>/<ContextName>' is therefore not allowed access. The response had HTTP status code 404.
+        
+Problem: You are requesting to different domain (probably via ajax). You are requesting CORS.
+
+CORS: https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS
+      A resource makes a cross-origin HTTP request when it requests a resource from a different domain, or 
+      port than the one which the first resource itself serves. For example, 
+      an HTML page served from http://domain-a.com makes an <img> src request for 
+      http://domain-b.com/image.jpg. Many pages on the web today load resources like CSS stylesheets, 
+      images and scripts from separate domains.
+
+Solution: Problem is not your code. The server you are requesting has setting not to allow cross-domain access. 
+          If you are using tomcat you need to allow it. You can do it via global allow access. 
+          Edit the file: <YOUR_TOMCAT>\conf\web.xml
+          Add following filter element before your closing web-app ie </web-app>
+          
+          
+     <filter>
+       <filter-name>CorsFilter</filter-name>
+       <filter-class>org.apache.catalina.filters.CorsFilter</filter-class>
+       <!-- To allow only specific domains
+         <init-param>
+            <param-name>cors.allowed.origins</param-name>
+            <param-value>http://otherdomain1.com</param-value>
+         </init-param>
+         <init-param>
+            <param-name>cors.allowed.origins</param-name>
+            <param-value>http://otherdomain2.com</param-value>
+         </init-param>
+       -->
+     </filter>
+     <filter-mapping>
+       <filter-name>CorsFilter</filter-name>
+       <url-pattern>/*</url-pattern>
+     </filter-mapping>
+     
+Restart the server and now server is allowing CORS.
+
+
+          
