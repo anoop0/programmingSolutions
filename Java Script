@@ -1,0 +1,2 @@
+Array Comparison: 
+ return a.length === b.length && a.every((el, ix) => el === b[ix]);
